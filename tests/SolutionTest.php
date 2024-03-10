@@ -1,8 +1,8 @@
 <?php
 
-namespace makao\LPSolve\Tests;
+namespace Kerigard\LPSolve\Tests;
 
-use makao\LPSolve\Solution;
+use Kerigard\LPSolve\Solution;
 
 class SolutionTest extends \PHPUnit_Framework_TestCase
 {

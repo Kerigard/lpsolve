@@ -1,11 +1,11 @@
 <?php
 
-namespace makao\LPSolve\Tests;
+namespace Kerigard\LPSolve\Tests;
 
-use makao\LPSolve\Solver;
-use makao\LPSolve\Problem;
-use makao\LPSolve\Solution;
-use makao\LPSolve\Constraint;
+use Kerigard\LPSolve\Solver;
+use Kerigard\LPSolve\Problem;
+use Kerigard\LPSolve\Solution;
+use Kerigard\LPSolve\Constraint;
 
 class SolverTest extends \PHPUnit_Framework_TestCase
 {

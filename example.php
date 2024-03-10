@@ -2,10 +2,10 @@
 
 require 'vendor/autoload.php';
 
-use makao\LPSolve\Constraint;
-use makao\LPSolve\Problem;
-use makao\LPSolve\Solver;
-use makao\LPSolve\Solution;
+use Kerigard\LPSolve\Constraint;
+use Kerigard\LPSolve\Problem;
+use Kerigard\LPSolve\Solver;
+use Kerigard\LPSolve\Solution;
 
 // Example 1
 $constraints = [

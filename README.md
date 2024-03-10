@@ -4,7 +4,7 @@
 ## Installation
 Run composer
 ```
-composer require makao/lpsolve
+composer require kerigard/lpsolve
 ```
 Require autoloader
 ```php
@@ -13,9 +13,9 @@ require 'vendor/autoload.php'
 
 ## Usage
 ```php
-use makao\LPSolve\Constraint;
-use makao\LPSolve\Problem;
-use makao\LPSolve\Solver;
+use Kerigard\LPSolve\Constraint;
+use Kerigard\LPSolve\Problem;
+use Kerigard\LPSolve\Solver;
 
 // Define constraints
 $constraints = [

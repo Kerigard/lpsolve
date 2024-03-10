@@ -1,6 +1,6 @@
 <?php
 
-namespace makao\LPSolve;
+namespace Kerigard\LPSolve;
 
 class Problem
 {

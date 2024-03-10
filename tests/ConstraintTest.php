@@ -1,8 +1,8 @@
 <?php
 
-namespace makao\LPSolve\Tests;
+namespace Kerigard\LPSolve\Tests;
 
-use makao\LPSolve\Constraint;
+use Kerigard\LPSolve\Constraint;
 
 class ConstraintTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,8 +27,7 @@ class ConstraintTest extends \PHPUnit_Framework_TestCase
         $constraint
             ->setCoefficients($coefficients)
             ->setComparison($comparison)
-            ->setValue($value)
-        ;
+            ->setValue($value);
 
         $this->assertEquals($constraint->getCoefficients(), $coefficients);
         $this->assertEquals($constraint->getComparison(), $comparison);

@@ -1,9 +1,9 @@
 <?php
 
-namespace makao\LPSolve\Tests;
+namespace Kerigard\LPSolve\Tests;
 
-use makao\LPSolve\Problem;
-use makao\LPSolve\Constraint;
+use Kerigard\LPSolve\Problem;
+use Kerigard\LPSolve\Constraint;
 
 class ProblemTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,8 +33,7 @@ class ProblemTest extends \PHPUnit_Framework_TestCase
             ->setObjective($objective)
             ->setConstraints($constraints)
             ->setLowerBounds($lowerBounds)
-            ->setUpperBounds($upperBounds)
-        ;
+            ->setUpperBounds($upperBounds);
 
         $this->assertEquals($problem->getObjective(), $objective);
         $this->assertEquals($problem->getConstraints(), $constraints);
