@@ -1,0 +1,43 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [5.6, '7.0', 7.1, 7.2, 7.3, 7.4, '8.0', 8.1, 8.2, 8.3]
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set lpsolve version
+        id: version
+        run: |
+          VERSION=${{ matrix.php }}
+          echo "version=${VERSION:0:1}.x" >> "$GITHUB_OUTPUT"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: phplpsolve55-Kerigard/lp-solve-php-docker@${{ steps.version.outputs.version }}
+        env:
+          PHPLPSOLVE55_PATH: lp-solve/extra/PHP
+          PHPLPSOLVE55_LIBS: lp-solve
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
