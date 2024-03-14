@@ -3,24 +3,27 @@
 namespace Kerigard\LPSolve\Tests;
 
 use Kerigard\LPSolve\Solution;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class SolutionTest extends \PHPUnit_Framework_TestCase
+class SolutionTest extends TestCase
 {
     /**
      * @dataProvider solutions
      */
+    #[DataProvider('solutions')]
     public function testSolutionObjectConstructor($objective, $count, $variables, $code, $status)
     {
         $solution = new Solution($objective, $count, $variables, $code, $status);
 
-        $this->assertEquals($solution->getObjective(), $objective);
-        $this->assertEquals($solution->getCount(), $count);
-        $this->assertEquals($solution->getVariables(), $variables);
-        $this->assertEquals($solution->getCode(), $code);
-        $this->assertEquals($solution->getStatus(), $status);
+        $this->assertEquals($objective, $solution->getObjective());
+        $this->assertEquals($count, $solution->getCount());
+        $this->assertEquals($variables, $solution->getVariables());
+        $this->assertEquals($code, $solution->getCode());
+        $this->assertEquals($status, $solution->getStatus());
     }
 
-    public function solutions()
+    public static function solutions()
     {
         return [
             [31.78275862069, 1, [28.6, 0, 0, 31.827586206897], 0, 'OPTIMAL solution'],

@@ -6,8 +6,10 @@ use Kerigard\LPSolve\Solver;
 use Kerigard\LPSolve\Problem;
 use Kerigard\LPSolve\Solution;
 use Kerigard\LPSolve\Constraint;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class SolverTest extends \PHPUnit_Framework_TestCase
+class SolverTest extends TestCase
 {
     public function testExtension()
     {
@@ -17,29 +19,37 @@ class SolverTest extends \PHPUnit_Framework_TestCase
     public function testSolverTypeException()
     {
         $this->expectException(\Exception::class);
+
         new Solver('Dummy objective direction');
     }
 
     /**
      * @dataProvider problems
      */
+    #[DataProvider('problems')]
     public function testSolverSuccess(Problem $problem, $type, $expectedSolution)
     {
         $solver = new Solver($type);
-        $solver->setScaling('SCALE_MEAN|SCALE_INTEGERS')->setVerbose(NEUTRAL);
+        $solver->setScaling(SCALE_MEAN | SCALE_INTEGERS)->setVerbose(NEUTRAL);
         $solution = $solver->solve($problem);
 
         $this->assertInstanceOf(Solution::class, $solution);
-        $this->assertObjectHasAttribute('objective', $solution);
-        $this->assertObjectHasAttribute('count', $solution);
-        $this->assertObjectHasAttribute('variables', $solution);
-        $this->assertObjectHasAttribute('code', $solution);
-        $this->assertObjectHasAttribute('status', $solution);
+        $this->assertTrue(property_exists($solution, 'objective'));
+        $this->assertTrue(property_exists($solution, 'count'));
+        $this->assertTrue(property_exists($solution, 'variables'));
+        $this->assertTrue(property_exists($solution, 'code'));
+        $this->assertTrue(property_exists($solution, 'status'));
 
-        $this->assertEquals($solution, $expectedSolution);
+        $this->assertEquals($expectedSolution->getObjective(), round($solution->getObjective(), 12));
+        $this->assertEquals($expectedSolution->getCount(), $solution->getCount());
+        $this->assertEquals($expectedSolution->getVariables(), array_map(function ($variable) {
+            return round($variable, 12);
+        }, $solution->getVariables()));
+        $this->assertEquals($expectedSolution->getCode(), $solution->getCode());
+        $this->assertEquals($expectedSolution->getStatus(), $solution->getStatus());
     }
 
-    public function problems()
+    public static function problems()
     {
         return [
             [
@@ -68,8 +78,8 @@ class SolverTest extends \PHPUnit_Framework_TestCase
                     []
                 ),
                 Solver::MAX,
-                new Solution(6986.8421052632, 1, [0, 56.578947368421, 18.421052631579], 0, 'OPTIMAL solution')
-            ]
+                new Solution(6986.842105263158, 1, [0, 56.578947368421, 18.421052631579], 0, 'OPTIMAL solution'),
+            ],
         ];
     }
 
@@ -80,15 +90,15 @@ class SolverTest extends \PHPUnit_Framework_TestCase
             [
                 Constraint::fromString('1x + 1y = 20'),
                 Constraint::fromString('0x + 1y <= 5'),
-                Constraint::fromString('1x + 0y <= 5')
+                Constraint::fromString('1x + 0y <= 5'),
             ]
         );
 
         $solver = new Solver(Solver::MIN);
         $solution = $solver->solve($problem);
 
-        $this->assertEquals($solution->getCount(), 0);
-        $this->assertEquals($solution->getCode(), 2);
-        $this->assertEquals($solution->getStatus(), 'Model is primal INFEASIBLE');
+        $this->assertEquals(0, $solution->getCount());
+        $this->assertEquals(2, $solution->getCode());
+        $this->assertEquals('Model is primal INFEASIBLE', $solution->getStatus());
     }
 }

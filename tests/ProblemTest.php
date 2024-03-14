@@ -4,54 +4,57 @@ namespace Kerigard\LPSolve\Tests;
 
 use Kerigard\LPSolve\Problem;
 use Kerigard\LPSolve\Constraint;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class ProblemTest extends \PHPUnit_Framework_TestCase
+class ProblemTest extends TestCase
 {
     /**
      * @dataProvider problems
      */
+    #[DataProvider('problems')]
     public function testProblemConstructor($objective, $constraints, $lowerBounds, $upperBounds)
     {
         $problem = new Problem($objective, $constraints, $lowerBounds, $upperBounds);
 
-        $this->assertEquals($problem->getObjective(), $objective);
-        $this->assertEquals($problem->getConstraints(), $constraints);
-        $this->assertEquals($problem->getLowerBounds(), $lowerBounds);
-        $this->assertEquals($problem->getUpperBounds(), $upperBounds);
-        $this->assertEquals($problem->countRows(), count($constraints));
-        $this->assertEquals($problem->countCols(), count($objective));
+        $this->assertEquals($objective, $problem->getObjective());
+        $this->assertEquals($constraints, $problem->getConstraints());
+        $this->assertEquals($lowerBounds, $problem->getLowerBounds());
+        $this->assertEquals($upperBounds, $problem->getUpperBounds());
+        $this->assertEquals(count($constraints), $problem->countRows());
+        $this->assertEquals(count($objective), $problem->countCols());
     }
 
     /**
      * @dataProvider problems
      */
+    #[DataProvider('problems')]
     public function testProblemAccessors($objective, $constraints, $lowerBounds, $upperBounds)
     {
         $problem = new Problem();
-
         $problem
             ->setObjective($objective)
             ->setConstraints($constraints)
             ->setLowerBounds($lowerBounds)
             ->setUpperBounds($upperBounds);
 
-        $this->assertEquals($problem->getObjective(), $objective);
-        $this->assertEquals($problem->getConstraints(), $constraints);
-        $this->assertEquals($problem->getLowerBounds(), $lowerBounds);
-        $this->assertEquals($problem->getUpperBounds(), $upperBounds);
-        $this->assertEquals($problem->countRows(), count($constraints));
-        $this->assertEquals($problem->countCols(), count($objective));
+        $this->assertEquals($objective, $problem->getObjective());
+        $this->assertEquals($constraints, $problem->getConstraints());
+        $this->assertEquals($lowerBounds, $problem->getLowerBounds());
+        $this->assertEquals($upperBounds, $problem->getUpperBounds());
+        $this->assertEquals(count($constraints), $problem->countRows());
+        $this->assertEquals(count($objective), $problem->countCols());
 
         $testConstraint = new Constraint();
         $constraints[] = $testConstraint;
 
         $problem->addConstraint($testConstraint);
 
-        $this->assertEquals($problem->getConstraints(), $constraints);
-        $this->assertEquals($problem->countRows(), count($constraints));
+        $this->assertEquals($constraints, $problem->getConstraints());
+        $this->assertEquals(count($constraints), $problem->countRows());
     }
 
-    public function problems()
+    public static function problems()
     {
         return [
             [

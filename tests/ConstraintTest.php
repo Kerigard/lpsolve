@@ -3,38 +3,40 @@
 namespace Kerigard\LPSolve\Tests;
 
 use Kerigard\LPSolve\Constraint;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class ConstraintTest extends \PHPUnit_Framework_TestCase
+class ConstraintTest extends TestCase
 {
     /**
      * @dataProvider constraints
      */
+    #[DataProvider('constraints')]
     public function testConstraintFromString($string, $coefficients, $comparison, $value)
     {
         $constraint = Constraint::fromString($string);
-        $this->assertEquals($constraint, new Constraint($coefficients, $comparison, $value));
-        $this->assertEquals($constraint->getCoefficients(), $coefficients);
-        $this->assertEquals($constraint->getComparison(), $comparison);
-        $this->assertEquals($constraint->getValue(), $value);
+
+        $this->assertEquals(new Constraint($coefficients, $comparison, $value), $constraint);
+        $this->assertEquals($coefficients, $constraint->getCoefficients());
+        $this->assertEquals($comparison, $constraint->getComparison());
+        $this->assertEquals($value, $constraint->getValue());
     }
 
     /**
      * @dataProvider constraints
      */
+    #[DataProvider('constraints')]
     public function testConstraintAccessors($string, $coefficients, $comparison, $value)
     {
         $constraint = new Constraint();
-        $constraint
-            ->setCoefficients($coefficients)
-            ->setComparison($comparison)
-            ->setValue($value);
+        $constraint->setCoefficients($coefficients)->setComparison($comparison)->setValue($value);
 
-        $this->assertEquals($constraint->getCoefficients(), $coefficients);
-        $this->assertEquals($constraint->getComparison(), $comparison);
-        $this->assertEquals($constraint->getValue(), $value);
+        $this->assertEquals($coefficients, $constraint->getCoefficients());
+        $this->assertEquals($comparison, $constraint->getComparison());
+        $this->assertEquals($value, $constraint->getValue());
     }
 
-    public function constraints()
+    public static function constraints()
     {
         return [
             ['0a + 78.26b + 0c + 2.9d >= 92.3', [0, 78.26, 0, 2.9], GE, 92.3],
