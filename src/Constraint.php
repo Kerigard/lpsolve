@@ -2,31 +2,43 @@
 
 namespace Kerigard\LPSolve;
 
+/**
+ * @link https://lpsolve.sourceforge.net/5.5/add_constraint.htm
+ */
 class Constraint
 {
-    private $coefficients = [];
-    private $comparison;
-    private $value;
+    /**
+     * @var int[]|float[]
+     */
+    protected $coefficients = [];
 
     /**
-     * Constructor
-     *
-     * @param array     $coefficients Constraint left side
-     * @param int|float $comparison   Comparison sign (LE, GE, EQ, FR)
-     * @param int|float $value        Constraint right side
+     * @var int
      */
-    public function __construct(array $coefficients = [], $comparison = null, $value = null)
+    protected $comparison;
+
+    /**
+     * @var int|float
+     */
+    protected $value;
+
+    /**
+     * @param int[]|float[] $coefficients Constraint left side
+     * @param int $comparison Comparison sign: LE, GE, EQ
+     * @param int|float $value Constraint right side
+     */
+    public function __construct(array $coefficients = [], $comparison = LE, $value = 0)
     {
         $this->coefficients = $coefficients;
-        $this->comparison = $comparison ?: FR;
+        $this->comparison = $comparison;
         $this->value = $value;
     }
 
     /**
-     * Create constraint from string
+     * Create constraint from string.
      *
-     * @param  string $string String constraint
-     * @return self
+     * @param string $string String constraint
+     * @return static
      */
     public static function fromString($string)
     {
@@ -36,15 +48,22 @@ class Constraint
         $comparison = self::parseComparison($split[1]);
         $value = floatval($split[2]);
 
-        return new Constraint($coefficients, $comparison, $value);
+        return new static($coefficients, $comparison, $value);
     }
 
+    /**
+     * @return int[]|float[]
+     */
     public function getCoefficients()
     {
         return $this->coefficients;
     }
 
-    public function setCoefficients($coefficients)
+    /**
+     * @param int[]|float[] $coefficients
+     * @return $this
+     */
+    public function setCoefficients(array $coefficients)
     {
         $this->coefficients = $coefficients;
 
@@ -52,12 +71,50 @@ class Constraint
     }
 
     /**
-     * Parse coefficients from string
-     *
-     * @param  string $expression Left side of equation
-     * @return array
+     * @return int
      */
-    private static function parseCoefficients($expression)
+    public function getComparison()
+    {
+        return $this->comparison;
+    }
+
+    /**
+     * @param int $comparison
+     * @return $this
+     */
+    public function setComparison($comparison)
+    {
+        $this->comparison = $comparison;
+
+        return $this;
+    }
+
+    /**
+     * @return int|float
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param int|float $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Parse coefficients from string.
+     *
+     * @param string $expression
+     * @return float[]
+     */
+    protected static function parseCoefficients($expression)
     {
         $coefficients = [];
         $split = preg_split('/[a-zA-Z]/', trim($expression), -1, PREG_SPLIT_NO_EMPTY);
@@ -69,25 +126,13 @@ class Constraint
         return $coefficients;
     }
 
-    public function getComparison()
-    {
-        return $this->comparison;
-    }
-
-    public function setComparison($comparison)
-    {
-        $this->comparison = $comparison;
-
-        return $this;
-    }
-
     /**
-     * Parse comparison sign
+     * Parse comparison sign.
      *
-     * @param  string $comparison Comparison sign
+     * @param string $comparison
      * @return int
      */
-    private static function parseComparison($comparison)
+    protected static function parseComparison($comparison)
     {
         if ($comparison === '<=') {
             return LE;
@@ -97,17 +142,5 @@ class Constraint
         }
 
         return EQ;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
     }
 }
