@@ -7,27 +7,32 @@ class Solution
     /**
      * @var int|float
      */
-    private $objective;
+    protected $objective;
 
     /**
      * @var int
      */
-    private $count;
+    protected $count;
 
     /**
      * @var int[]|float[]
      */
-    private $variables;
+    protected $variables;
 
     /**
      * @var int
      */
-    private $code;
+    protected $code;
 
     /**
      * @var string
      */
-    private $status;
+    protected $status;
+
+    /**
+     * @var int
+     */
+    protected $iterations;
 
     /**
      * @param int|float $objective Objective value
@@ -35,14 +40,16 @@ class Solution
      * @param int[]|float[] $variables Variables value
      * @param int $code Status code
      * @param string $status Status text
+     * @param int $iterations Total number of iterations
      */
-    public function __construct($objective, $count, array $variables, $code, $status)
+    public function __construct($objective, $count, array $variables, $code, $status, $iterations)
     {
         $this->objective = $objective;
         $this->count = $count;
         $this->variables = $variables;
         $this->code = $code;
         $this->status = $status;
+        $this->iterations = $iterations;
     }
 
     /**
@@ -84,5 +91,13 @@ class Solution
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIterations()
+    {
+        return $this->iterations;
     }
 }

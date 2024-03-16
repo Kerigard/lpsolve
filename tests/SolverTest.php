@@ -39,6 +39,7 @@ class SolverTest extends TestCase
         $this->assertTrue(property_exists($solution, 'variables'));
         $this->assertTrue(property_exists($solution, 'code'));
         $this->assertTrue(property_exists($solution, 'status'));
+        $this->assertTrue(property_exists($solution, 'iterations'));
 
         $this->assertEquals($expectedSolution->getObjective(), round($solution->getObjective(), 12));
         $this->assertEquals($expectedSolution->getCount(), $solution->getCount());
@@ -47,6 +48,7 @@ class SolverTest extends TestCase
         }, $solution->getVariables()));
         $this->assertEquals($expectedSolution->getCode(), $solution->getCode());
         $this->assertEquals($expectedSolution->getStatus(), $solution->getStatus());
+        $this->assertEquals($expectedSolution->getIterations(), $solution->getIterations());
     }
 
     public static function problems()
@@ -64,7 +66,7 @@ class SolverTest extends TestCase
                     [Infinite, Infinite, Infinite, 48.98]
                 ),
                 Solver::MIN,
-                new Solution(31.78275862069, 1, [28.6, 0, 0, 31.827586206897], 0, 'OPTIMAL solution'),
+                new Solution(31.78275862069, 1, [28.6, 0, 0, 31.827586206897], 0, 'OPTIMAL solution', 1),
             ],
             [
                 new Problem(
@@ -78,7 +80,7 @@ class SolverTest extends TestCase
                     []
                 ),
                 Solver::MAX,
-                new Solution(6986.842105263158, 1, [0, 56.578947368421, 18.421052631579], 0, 'OPTIMAL solution'),
+                new Solution(6986.842105263158, 1, [0, 56.578947368421, 18.421052631579], 0, 'OPTIMAL solution', 2),
             ],
         ];
     }
@@ -100,5 +102,6 @@ class SolverTest extends TestCase
         $this->assertEquals(0, $solution->getCount());
         $this->assertEquals(2, $solution->getCode());
         $this->assertEquals('Model is primal INFEASIBLE', $solution->getStatus());
+        $this->assertEquals(2, $solution->getIterations());
     }
 }
