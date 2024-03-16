@@ -115,7 +115,8 @@ class Solver
             lpsolve('get_solutioncount', $lpsolve),
             lpsolve('get_variables', $lpsolve)[0],
             $statusCode = lpsolve('get_status', $lpsolve),
-            lpsolve('get_statustext', $lpsolve, $statusCode)
+            lpsolve('get_statustext', $lpsolve, $statusCode),
+            (int) lpsolve('get_total_iter', $lpsolve)
         );
 
         lpsolve('delete_lp', $lpsolve);
