@@ -4,18 +4,31 @@ namespace Kerigard\LPSolve;
 
 class Problem
 {
-    private $objective = [];
-    private $constraints = [];
-    private $upperBounds = [];
-    private $lowerBounds = [];
+    /**
+     * @var int[]|float[]
+     */
+    protected $objective = [];
 
     /**
-     * Constructor
-     *
-     * @param array $objective   Array of objective coefficients
-     * @param array $constraints Array of Constraint objects
-     * @param array $lowerBounds Array of lower bounds coefficients
-     * @param array $upperBounds Array of upper bounds coefficients
+     * @var \Kerigard\LPSolve\Constraint[]
+     */
+    protected $constraints = [];
+
+    /**
+     * @var int[]|float[]
+     */
+    protected $upperBounds = [];
+
+    /**
+     * @var int[]|float[]
+     */
+    protected $lowerBounds = [];
+
+    /**
+     * @param int[]|float[] $objective Array of objective coefficients
+     * @param \Kerigard\LPSolve\Constraint[] $constraints Array of Constraint objects
+     * @param int[]|float[] $lowerBounds Array of lower bounds coefficients
+     * @param int[]|float[] $upperBounds Array of upper bounds coefficients
      */
     public function __construct(
         array $objective = [],
@@ -29,11 +42,20 @@ class Problem
         $this->upperBounds = $upperBounds;
     }
 
+    /**
+     * @return int[]|float[]
+     */
     public function getObjective()
     {
         return $this->objective;
     }
 
+    /**
+     * @param int[]|float[] $objective
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.5/set_obj_fn.htm
+     */
     public function setObjective(array $objective)
     {
         $this->objective = $objective;
@@ -41,11 +63,20 @@ class Problem
         return $this;
     }
 
+    /**
+     * @return \Kerigard\LPSolve\Constraint[]
+     */
     public function getConstraints()
     {
         return $this->constraints;
     }
 
+    /**
+     * @param \Kerigard\LPSolve\Constraint[] $constraints
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.5/add_constraint.htm
+     */
     public function setConstraints(array $constraints)
     {
         $this->constraints = $constraints;
@@ -53,6 +84,11 @@ class Problem
         return $this;
     }
 
+    /**
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.5/add_constraint.htm
+     */
     public function addConstraint(Constraint $constraint)
     {
         $this->constraints[] = $constraint;
@@ -60,24 +96,42 @@ class Problem
         return $this;
     }
 
+    /**
+     * @return int[]|float[]
+     */
     public function getLowerBounds()
     {
         return $this->lowerBounds;
     }
 
-    public function setLowerBounds($lowerBounds)
+    /**
+     * @param int[]|float[] $lowerBounds
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.5/set_lowbo.htm
+     */
+    public function setLowerBounds(array $lowerBounds)
     {
         $this->lowerBounds = $lowerBounds;
 
         return $this;
     }
 
+    /**
+     * @return int[]|float[]
+     */
     public function getUpperBounds()
     {
         return $this->upperBounds;
     }
 
-    public function setUpperBounds($upperBounds)
+    /**
+     * @param int[]|float[] $upperBounds
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.5/set_upbo.htm
+     */
+    public function setUpperBounds(array $upperBounds)
     {
         $this->upperBounds = $upperBounds;
 
@@ -85,8 +139,6 @@ class Problem
     }
 
     /**
-     * Helper method for make_lp
-     *
      * @return int
      */
     public function countRows()
@@ -95,8 +147,6 @@ class Problem
     }
 
     /**
-     * Helper method for make_lp
-     *
      * @return int
      */
     public function countCols()

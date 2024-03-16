@@ -1,5 +1,5 @@
 # LPSolve
-[LPSolve](http://lpsolve.sourceforge.net) is a PHP extension for solving linear programming problems. This library provides a wrapper for standard lpsolve() function.
+[LPSolve](https://lpsolve.sourceforge.net) is a PHP extension for solving linear programming problems. This library provides a wrapper for standard lpsolve() function.
 
 ## Installation
 Run composer
@@ -35,7 +35,7 @@ $constraints = [
 $problem = new Problem([143, 60, 195], $constraints);
 
 // Solve it!
-$solver = new Solver(Solver::MAX); // Can be either Solver::MIN for minimalization
+$solver = new Solver(Solver::MAX); // Can be either Solver::MIN for minimization
 $solution = $solver->solve($problem);
 
 var_dump($solution);
@@ -45,7 +45,7 @@ var_dump($solution);
 
 There are 3 examples provided in example.php.
 
-For more information please visit: http://lpsolve.sourceforge.net
+For more information please visit: https://lpsolve.sourceforge.net
 
 ## License
 MIT
