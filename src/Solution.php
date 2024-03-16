@@ -36,7 +36,7 @@ class Solution
      * @param int $code Status code
      * @param string $status Status text
      */
-    public function __construct($objective, int $count, array $variables, int $code, string $status)
+    public function __construct($objective, $count, array $variables, $code, $status)
     {
         $this->objective = $objective;
         $this->count = $count;

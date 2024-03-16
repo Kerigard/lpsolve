@@ -27,7 +27,7 @@ class Constraint
      * @param int $comparison Comparison sign: LE, GE, EQ
      * @param int|float $value Constraint right side
      */
-    public function __construct(array $coefficients = [], int $comparison = LE, $value = 0)
+    public function __construct(array $coefficients = [], $comparison = LE, $value = 0)
     {
         $this->coefficients = $coefficients;
         $this->comparison = $comparison;
@@ -40,7 +40,7 @@ class Constraint
      * @param string $string String constraint
      * @return static
      */
-    public static function fromString(string $string)
+    public static function fromString($string)
     {
         $split = preg_split('/(<=|=|>=)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
 
@@ -79,9 +79,10 @@ class Constraint
     }
 
     /**
+     * @param int $comparison
      * @return $this
      */
-    public function setComparison(int $comparison)
+    public function setComparison($comparison)
     {
         $this->comparison = $comparison;
 
@@ -110,9 +111,10 @@ class Constraint
     /**
      * Parse coefficients from string.
      *
+     * @param string $expression
      * @return float[]
      */
-    protected static function parseCoefficients(string $expression)
+    protected static function parseCoefficients($expression)
     {
         $coefficients = [];
         $split = preg_split('/[a-zA-Z]/', trim($expression), -1, PREG_SPLIT_NO_EMPTY);
@@ -127,9 +129,10 @@ class Constraint
     /**
      * Parse comparison sign.
      *
+     * @param string $comparison
      * @return int
      */
-    protected static function parseComparison(string $comparison)
+    protected static function parseComparison($comparison)
     {
         if ($comparison === '<=') {
             return LE;

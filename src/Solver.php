@@ -30,7 +30,7 @@ class Solver
      *
      * @throws \Exception
      */
-    public function __construct(string $type = self::MIN)
+    public function __construct($type = self::MIN)
     {
         if (!function_exists('lpsolve')) {
             throw new Exception('Extension lpsolve not found');
@@ -52,7 +52,7 @@ class Solver
      *
      * @link https://lpsolve.sourceforge.net/5.5/set_scaling.htm
      */
-    public function setScaling(int $scaling)
+    public function setScaling($scaling)
     {
         $this->scaling = $scaling;
 
@@ -67,7 +67,7 @@ class Solver
      *
      * @link https://lpsolve.sourceforge.net/5.5/set_verbose.htm
      */
-    public function setVerbose(int $verbose)
+    public function setVerbose($verbose)
     {
         $this->verbose = $verbose;
 
