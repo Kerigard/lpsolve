@@ -104,4 +104,32 @@ class SolverTest extends TestCase
         $this->assertEquals('Model is primal INFEASIBLE', $solution->getStatus());
         $this->assertEquals(2, $solution->getIterations());
     }
+
+    public function testSolverCallbacks()
+    {
+        $problem = new Problem(
+            [1, 3, 6.24, 0.1],
+            [
+                new Constraint([0, 78.26, 0, 2.9], GE, 92.3),
+                new Constraint([0.24, 0, 11.31, 0], LE, 14.8),
+                new Constraint([12.68, 0, 0.08, 0.9], GE, 4),
+            ]
+        );
+        $columns = $iterations = 0;
+
+        $solver = new Solver();
+        $solution = $solver->beforeSolve(function ($lpsolve, $problem) use (&$columns) {
+            $columns = lpsolve('get_Ncolumns', $lpsolve);
+
+            $this->assertEquals($columns, $problem->countCols());
+        })->afterSolve(function ($lpsolve, $problem, $solution) use (&$iterations) {
+            $iterations = (int) lpsolve('get_total_iter', $lpsolve);
+
+            $this->assertEquals($iterations, $solution->getIterations());
+        })->solve($problem);
+
+        $this->assertEquals(3.18275862069, round($solution->getObjective(), 12));
+        $this->assertEquals(4, $columns);
+        $this->assertEquals(1, $iterations);
+    }
 }
