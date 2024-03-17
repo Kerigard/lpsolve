@@ -26,6 +26,16 @@ class Solver
     protected $verbose = IMPORTANT;
 
     /**
+     * @var \Closure(mixed, \Kerigard\LPSolve\Problem): void|null
+     */
+    protected $beforeCallback = null;
+
+    /**
+     * @var \Closure(mixed, \Kerigard\LPSolve\Problem, \Kerigard\LPSolve\Solution): void|null
+     */
+    protected $afterCallback = null;
+
+    /**
      * @param \Kerigard\LPSolve\Solver::MIN|\Kerigard\LPSolve\Solver::MAX $type Type of optimization (minimize or maximize)
      *
      * @throws \Exception
@@ -75,6 +85,28 @@ class Solver
     }
 
     /**
+     * @param \Closure(mixed, \Kerigard\LPSolve\Problem): void $callback
+     * @return $this
+     */
+    public function beforeSolve($callback)
+    {
+        $this->beforeCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param \Closure(mixed, \Kerigard\LPSolve\Problem, \Kerigard\LPSolve\Solution): void $callback
+     * @return $this
+     */
+    public function afterSolve($callback)
+    {
+        $this->afterCallback = $callback;
+
+        return $this;
+    }
+
+    /**
      * Solve problem.
      *
      * @param \Kerigard\LPSolve\Problem $problem Defined problem
@@ -108,6 +140,10 @@ class Solver
             lpsolve('set_scaling', $lpsolve, $this->scaling);
         }
 
+        if ($this->beforeCallback) {
+            $this->beforeCallback->__invoke($lpsolve, $problem);
+        }
+
         lpsolve('solve', $lpsolve);
 
         $solution = new Solution(
@@ -118,6 +154,10 @@ class Solver
             lpsolve('get_statustext', $lpsolve, $statusCode),
             (int) lpsolve('get_total_iter', $lpsolve)
         );
+
+        if ($this->afterCallback) {
+            $this->afterCallback->__invoke($lpsolve, $problem, $solution);
+        }
 
         lpsolve('delete_lp', $lpsolve);
 
