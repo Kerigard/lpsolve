@@ -1,17 +1,23 @@
 # LPSolve
+
 [LPSolve](https://lpsolve.sourceforge.net) is a PHP extension for solving linear programming problems. This library provides a wrapper for standard lpsolve() function.
 
 ## Installation
+
 Run composer
-```
+
+```bash
 composer require kerigard/lpsolve
 ```
+
 Require autoloader
+
 ```php
 require 'vendor/autoload.php'
 ```
 
 ## Usage
+
 ```php
 use Kerigard\LPSolve\Constraint;
 use Kerigard\LPSolve\Problem;
@@ -28,7 +34,7 @@ $constraints = [
 // $constraints = [
 //     Constraint::fromString('120x + 210y + 150.75z <= 15000'),
 //     Constraint::fromString('110x + 30y + 125z <= 4000'),
-//     Constraint::fromString('1x + 1y + 1z <= 75')
+//     Constraint::fromString('x + y + z <= 75')
 // ];
 
 // Define problem
@@ -41,11 +47,11 @@ $solution = $solver->solve($problem);
 var_dump($solution);
 ```
 
-**Note:** Do not omit coefficient value when create constraint from string.
-
-There are 3 examples provided in example.php.
+> [!NOTE]
+> Do not omit coefficients when create constraint from string.
 
 For more information please visit: https://lpsolve.sourceforge.net
 
 ## License
-MIT
+
+[MIT](LICENSE.md)
