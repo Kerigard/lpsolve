@@ -117,10 +117,12 @@ class Constraint
     protected static function parseCoefficients($expression)
     {
         $coefficients = [];
-        $split = preg_split('/[a-zA-Z]/', trim($expression), -1, PREG_SPLIT_NO_EMPTY);
+        $expression = preg_replace('/\s+/', '', $expression);
+        $expression = preg_replace('/^([^+-])/', '+$1', $expression);
+        $split = preg_split('/([a-zA-Z]+\d*)/', $expression, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($split as $coefficient) {
-            $coefficients[] = floatval(preg_replace('/\s+/', '', $coefficient));
+            $coefficients[] = floatval(preg_replace('/([\+-])$/', '${1}1', $coefficient));
         }
 
         return $coefficients;

@@ -117,24 +117,24 @@ class Solver
         $lpsolve = lpsolve('make_lp', 0, $problem->countCols());
 
         lpsolve('set_verbose', $lpsolve, $this->verbose);
-        lpsolve('set_obj_fn', $lpsolve, $problem->getObjective());
+        lpsolve('set_obj_fn', $lpsolve, array_values($problem->getObjective()));
         lpsolve($this->type, $lpsolve);
 
         foreach ($problem->getConstraints() as $constraint) {
             lpsolve(
                 'add_constraint',
                 $lpsolve,
-                $constraint->getCoefficients(),
+                array_values($constraint->getCoefficients()),
                 $constraint->getComparison(),
                 $constraint->getValue()
             );
         }
 
         if ($problem->getLowerBounds()) {
-            lpsolve('set_lowbo', $lpsolve, $problem->getLowerBounds());
+            lpsolve('set_lowbo', $lpsolve, array_values($problem->getLowerBounds()));
         }
         if ($problem->getUpperBounds()) {
-            lpsolve('set_upbo', $lpsolve, $problem->getUpperBounds());
+            lpsolve('set_upbo', $lpsolve, array_values($problem->getUpperBounds()));
         }
         if ($this->scaling) {
             lpsolve('set_scaling', $lpsolve, $this->scaling);
