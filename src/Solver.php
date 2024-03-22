@@ -3,12 +3,18 @@
 namespace Kerigard\LPSolve;
 
 use Exception;
+use LPSolveException;
 
 class Solver
 {
     const MIN = 'set_minim';
 
     const MAX = 'set_maxim';
+
+    /**
+     * @var class-string
+     */
+    protected $exception = Exception::class;
 
     /**
      * @var string
@@ -38,15 +44,20 @@ class Solver
     /**
      * @param \Kerigard\LPSolve\Solver::MIN|\Kerigard\LPSolve\Solver::MAX $type Type of optimization (minimize or maximize)
      *
+     * @throws \LPSolveException
      * @throws \Exception
      */
     public function __construct($type = self::MIN)
     {
+        if (class_exists('\LPSolveException')) {
+            $this->exception = LPSolveException::class;
+        }
+
         if (!function_exists('lpsolve')) {
-            throw new Exception('Extension lpsolve not found');
+            throw new $this->exception('Extension lpsolve not found');
         }
         if (!in_array($type, [self::MIN, self::MAX], true)) {
-            throw new Exception('Objective function must be minimized or maximized');
+            throw new $this->exception('Objective function must be minimized or maximized');
         }
 
         $this->type = $type;
@@ -117,6 +128,7 @@ class Solver
         $lpsolve = lpsolve('make_lp', 0, $problem->countCols());
 
         lpsolve('set_verbose', $lpsolve, $this->verbose);
+        lpsolve('set_scaling', $lpsolve, $this->scaling);
         lpsolve('set_obj_fn', $lpsolve, array_values($problem->getObjective()));
         lpsolve($this->type, $lpsolve);
 
@@ -135,9 +147,6 @@ class Solver
         }
         if ($problem->getUpperBounds()) {
             lpsolve('set_upbo', $lpsolve, array_values($problem->getUpperBounds()));
-        }
-        if ($this->scaling) {
-            lpsolve('set_scaling', $lpsolve, $this->scaling);
         }
 
         if ($this->beforeCallback) {

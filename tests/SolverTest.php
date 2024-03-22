@@ -6,6 +6,7 @@ use Kerigard\LPSolve\Solver;
 use Kerigard\LPSolve\Problem;
 use Kerigard\LPSolve\Solution;
 use Kerigard\LPSolve\Constraint;
+use LPSolveException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -16,11 +17,24 @@ class SolverTest extends TestCase
         $this->assertTrue(function_exists('lpsolve'));
     }
 
-    public function testSolverTypeException()
+    public function testSolverThrowException()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(LPSolveException::class);
+        $this->expectExceptionMessage('Objective function must be minimized or maximized');
 
         new Solver('Dummy objective direction');
+
+        $this->expectExceptionMessage('Invalid vector');
+
+        $problem = new Problem(
+            [1],
+            [
+                new Constraint([0, 78.26, 0, 2.9], GE, 92.3),
+            ]
+        );
+
+        $solver = new Solver();
+        $solver->solve($problem);
     }
 
     /**
