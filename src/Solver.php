@@ -2,9 +2,13 @@
 
 namespace Kerigard\LPSolve;
 
+use BadMethodCallException;
 use Exception;
 use LPSolveException;
 
+/**
+ * @method $this throw() Throw an exception if the optimal solution was not obtained.
+ */
 class Solver
 {
     const MIN = 'set_minim';
@@ -30,6 +34,11 @@ class Solver
      * @var int
      */
     protected $verbose = IMPORTANT;
+
+    /**
+     * @var bool
+     */
+    protected $throw = false;
 
     /**
      * @var \Closure(mixed, \Kerigard\LPSolve\Problem): void|null
@@ -170,6 +179,42 @@ class Solver
 
         lpsolve('delete_lp', $lpsolve);
 
+        if ($this->throw && $solution->getCode() !== OPTIMAL) {
+            throw new $this->exception($solution->getStatus(), $solution->getCode());
+        }
+
         return $solution;
+    }
+
+    /**
+     * @param string $method
+     * @param mixed[] $parameters
+     * @return $this
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        if ($method === 'throw') {
+            return $this->setThrow();
+        }
+
+        throw new BadMethodCallException(sprintf(
+            'Call to undefined method %s::%s()',
+            self::class,
+            $method
+        ));
+    }
+
+    /**
+     * Throw an exception if the optimal solution was not obtained.
+     *
+     * @return $this
+     */
+    protected function setThrow()
+    {
+        $this->throw = true;
+
+        return $this;
     }
 }
