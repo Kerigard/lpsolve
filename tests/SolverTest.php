@@ -119,6 +119,25 @@ class SolverTest extends TestCase
         $this->assertEquals(2, $solution->getIterations());
     }
 
+    public function testSolverFailureThrowException()
+    {
+        $this->expectException(LPSolveException::class);
+        $this->expectExceptionMessage('Model is primal INFEASIBLE');
+        $this->expectExceptionCode(2);
+
+        $problem = new Problem(
+            [10, 10],
+            [
+                Constraint::fromString('1x + 1y = 20'),
+                Constraint::fromString('0x + 1y <= 5'),
+                Constraint::fromString('1x + 0y <= 5'),
+            ]
+        );
+
+        $solver = new Solver(Solver::MIN);
+        $solver->throw()->solve($problem);
+    }
+
     public function testSolverCallbacks()
     {
         $problem = new Problem(
