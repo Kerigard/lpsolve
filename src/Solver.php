@@ -157,7 +157,7 @@ class Solver
      */
     public function solve(Problem $problem)
     {
-        $lpsolve = lpsolve('make_lp', 0, $problem->countCols());
+        $lpsolve = lpsolve('make_lp', 0, $columns = $problem->countCols());
 
         lpsolve('set_scaling', $lpsolve, $this->scaling);
         lpsolve('set_verbose', $lpsolve, $this->verbose);
@@ -189,7 +189,7 @@ class Solver
                 }
             }
         } elseif ($problem->getIntegerVariables()) {
-            for ($i = 1; $i <= $problem->countCols(); $i++) {
+            for ($i = 1; $i <= $columns; $i++) {
                 lpsolve('set_int', $lpsolve, $i, 1);
             }
         }
@@ -201,7 +201,7 @@ class Solver
                 }
             }
         } elseif ($problem->getBinaryVariables()) {
-            for ($i = 1; $i <= $problem->countCols(); $i++) {
+            for ($i = 1; $i <= $columns; $i++) {
                 lpsolve('set_binary', $lpsolve, $i, 1);
             }
         }
