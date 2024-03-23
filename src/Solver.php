@@ -36,6 +36,11 @@ class Solver
     protected $verbose = IMPORTANT;
 
     /**
+     * @var int
+     */
+    protected $timeout = 0;
+
+    /**
      * @var bool
      */
     protected $throw = false;
@@ -105,6 +110,21 @@ class Solver
     }
 
     /**
+     * Set timeout.
+     *
+     * @param int $seconds
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.0/set_timeout.htm
+     */
+    public function setTimeout($seconds)
+    {
+        $this->timeout = $seconds;
+
+        return $this;
+    }
+
+    /**
      * @param \Closure(mixed, \Kerigard\LPSolve\Problem): void $callback
      * @return $this
      */
@@ -139,8 +159,9 @@ class Solver
     {
         $lpsolve = lpsolve('make_lp', 0, $problem->countCols());
 
-        lpsolve('set_verbose', $lpsolve, $this->verbose);
         lpsolve('set_scaling', $lpsolve, $this->scaling);
+        lpsolve('set_verbose', $lpsolve, $this->verbose);
+        lpsolve('set_timeout', $lpsolve, $this->timeout);
         lpsolve('set_obj_fn', $lpsolve, array_values($problem->getObjective()));
         lpsolve($this->type, $lpsolve);
 
