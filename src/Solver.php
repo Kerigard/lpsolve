@@ -131,6 +131,9 @@ class Solver
      *
      * @param \Kerigard\LPSolve\Problem $problem Defined problem
      * @return \Kerigard\LPSolve\Solution
+     *
+     * @throws \LPSolveException
+     * @throws \Exception
      */
     public function solve(Problem $problem)
     {
@@ -156,6 +159,30 @@ class Solver
         }
         if ($problem->getUpperBounds()) {
             lpsolve('set_upbo', $lpsolve, array_values($problem->getUpperBounds()));
+        }
+
+        if (is_array($problem->getIntegerVariables())) {
+            foreach (array_values($problem->getIntegerVariables()) as $key => $value) {
+                if ($value) {
+                    lpsolve('set_int', $lpsolve, $key + 1, 1);
+                }
+            }
+        } elseif ($problem->getIntegerVariables()) {
+            for ($i = 1; $i <= $problem->countCols(); $i++) {
+                lpsolve('set_int', $lpsolve, $i, 1);
+            }
+        }
+
+        if (is_array($problem->getBinaryVariables())) {
+            foreach (array_values($problem->getBinaryVariables()) as $key => $value) {
+                if ($value) {
+                    lpsolve('set_binary', $lpsolve, $key + 1, 1);
+                }
+            }
+        } elseif ($problem->getBinaryVariables()) {
+            for ($i = 1; $i <= $problem->countCols(); $i++) {
+                lpsolve('set_binary', $lpsolve, $i, 1);
+            }
         }
 
         if ($this->beforeCallback) {
@@ -193,7 +220,7 @@ class Solver
      *
      * @throws \BadMethodCallException
      */
-    public function __call($method, $parameters)
+    public function __call($method, array $parameters)
     {
         if ($method === 'throw') {
             return $this->setThrow();

@@ -25,21 +25,37 @@ class Problem
     protected $lowerBounds = [];
 
     /**
+     * @var bool[]|int[]|bool
+     */
+    protected $integerVariables = [];
+
+    /**
+     * @var bool[]|int[]|bool
+     */
+    protected $binaryVariables = [];
+
+    /**
      * @param int[]|float[] $objective Array of objective coefficients
      * @param \Kerigard\LPSolve\Constraint[] $constraints Array of Constraint objects
      * @param int[]|float[] $lowerBounds Array of lower bounds coefficients
      * @param int[]|float[] $upperBounds Array of upper bounds coefficients
+     * @param bool[]|int[]|bool $integerVariables Array of integer variables
+     * @param bool[]|int[]|bool $binaryVariables Array of binary variables
      */
     public function __construct(
         array $objective = [],
         array $constraints = [],
         array $lowerBounds = [],
-        array $upperBounds = []
+        array $upperBounds = [],
+        $integerVariables = [],
+        $binaryVariables = []
     ) {
         $this->objective = $objective;
         $this->constraints = $constraints;
         $this->lowerBounds = $lowerBounds;
         $this->upperBounds = $upperBounds;
+        $this->integerVariables = $integerVariables;
+        $this->binaryVariables = $binaryVariables;
     }
 
     /**
@@ -134,6 +150,48 @@ class Problem
     public function setUpperBounds(array $upperBounds)
     {
         $this->upperBounds = $upperBounds;
+
+        return $this;
+    }
+
+    /**
+     * @return bool[]|int[]|bool
+     */
+    public function getIntegerVariables()
+    {
+        return $this->integerVariables;
+    }
+
+    /**
+     * @param bool[]|int[]|bool $integerVariables
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.0/set_int.htm
+     */
+    public function setIntegerVariables($integerVariables)
+    {
+        $this->integerVariables = $integerVariables;
+
+        return $this;
+    }
+
+    /**
+     * @return bool[]|int[]|bool
+     */
+    public function getBinaryVariables()
+    {
+        return $this->binaryVariables;
+    }
+
+    /**
+     * @param bool[]|int[]|bool $binaryVariables
+     * @return $this
+     *
+     * @link https://lpsolve.sourceforge.net/5.0/set_binary.htm
+     */
+    public function setBinaryVariables($binaryVariables)
+    {
+        $this->binaryVariables = $binaryVariables;
 
         return $this;
     }

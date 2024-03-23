@@ -77,7 +77,9 @@ class SolverTest extends TestCase
                         new Constraint([12.68, 0, 0.08, 0.9], GE, 4),
                     ],
                     [28.6, 0, 0, 18],
-                    [Infinite, Infinite, Infinite, 48.98]
+                    [Infinite, Infinite, Infinite, 48.98],
+                    [],
+                    []
                 ),
                 Solver::MIN,
                 new Solution(31.78275862069, 1, [28.6, 0, 0, 31.827586206897], 0, 'OPTIMAL solution', 1),
@@ -91,10 +93,63 @@ class SolverTest extends TestCase
                         new Constraint([1, 1, 1], LE, 75),
                     ],
                     [],
+                    [],
+                    [],
                     []
                 ),
                 Solver::MAX,
                 new Solution(6986.842105263158, 1, [0, 56.578947368421, 18.421052631579], 0, 'OPTIMAL solution', 2),
+            ],
+            [
+                new Problem(
+                    [-1, -2, 0.1, 3],
+                    [
+                        new Constraint([1, 1, 0, 0], LE, 5),
+                        new Constraint([2, -1, 0, 0], GE, 0),
+                        new Constraint([-1, 3, 0, 0], GE, 0),
+                        new Constraint([0, 0, 1, 1], GE, 0.5),
+                    ],
+                    [0, 0, 1.1, 0],
+                    [],
+                    [0, 0, 1, 0],
+                    []
+                ),
+                Solver::MIN,
+                new Solution(-8.1333333333330007, 1, [1.666666666667, 3.333333333333, 2, 0], 0, 'OPTIMAL solution', 2),
+            ],
+            [
+                new Problem(
+                    [-1, -2, 0.1, 3],
+                    [
+                        new Constraint([1, 1, 0, 0], LE, 5),
+                        new Constraint([2, -1, 0, 0], GE, 0),
+                        new Constraint([-1, 3, 0, 0], GE, 0),
+                        new Constraint([0, 0, 1, 1], GE, 0.5),
+                    ],
+                    [0, 0, 1.1, 0],
+                    [],
+                    [0, 0, 1, 0],
+                    [1, 0, 0, 1]
+                ),
+                Solver::MIN,
+                new Solution(-4.8, 1, [1, 2, 2, 0], 0, 'OPTIMAL solution', 2),
+            ],
+            [
+                new Problem(
+                    [-1, -2, 0.1, 3],
+                    [
+                        new Constraint([1, 1, 0, 0], LE, 5),
+                        new Constraint([2, -1, 0, 0], GE, 0),
+                        new Constraint([-1, 3, 0, 0], GE, 0),
+                        new Constraint([0, 0, 1, 1], GE, 0.5),
+                    ],
+                    [0, 0, 1.1, 0],
+                    [],
+                    false,
+                    true
+                ),
+                Solver::MIN,
+                new Solution(-2.9, 1, [1, 1, 1, 0], 0, 'OPTIMAL solution', 3),
             ],
         ];
     }

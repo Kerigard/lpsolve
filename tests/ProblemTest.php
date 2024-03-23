@@ -13,14 +13,29 @@ class ProblemTest extends TestCase
      * @dataProvider problems
      */
     #[DataProvider('problems')]
-    public function testProblemConstructor($objective, $constraints, $lowerBounds, $upperBounds)
-    {
-        $problem = new Problem($objective, $constraints, $lowerBounds, $upperBounds);
+    public function testProblemConstructor(
+        $objective,
+        $constraints,
+        $lowerBounds,
+        $upperBounds,
+        $integerVariables,
+        $binaryVariables
+    ) {
+        $problem = new Problem(
+            $objective,
+            $constraints,
+            $lowerBounds,
+            $upperBounds,
+            $integerVariables,
+            $binaryVariables
+        );
 
         $this->assertEquals($objective, $problem->getObjective());
         $this->assertEquals($constraints, $problem->getConstraints());
         $this->assertEquals($lowerBounds, $problem->getLowerBounds());
         $this->assertEquals($upperBounds, $problem->getUpperBounds());
+        $this->assertEquals($integerVariables, $problem->getIntegerVariables());
+        $this->assertEquals($binaryVariables, $problem->getBinaryVariables());
         $this->assertEquals(count($constraints), $problem->countRows());
         $this->assertEquals(count($objective), $problem->countCols());
     }
@@ -29,19 +44,29 @@ class ProblemTest extends TestCase
      * @dataProvider problems
      */
     #[DataProvider('problems')]
-    public function testProblemAccessors($objective, $constraints, $lowerBounds, $upperBounds)
-    {
+    public function testProblemAccessors(
+        $objective,
+        $constraints,
+        $lowerBounds,
+        $upperBounds,
+        $integerVariables,
+        $binaryVariables
+    ) {
         $problem = new Problem();
         $problem
             ->setObjective($objective)
             ->setConstraints($constraints)
             ->setLowerBounds($lowerBounds)
-            ->setUpperBounds($upperBounds);
+            ->setUpperBounds($upperBounds)
+            ->setIntegerVariables($integerVariables)
+            ->setBinaryVariables($binaryVariables);
 
         $this->assertEquals($objective, $problem->getObjective());
         $this->assertEquals($constraints, $problem->getConstraints());
         $this->assertEquals($lowerBounds, $problem->getLowerBounds());
         $this->assertEquals($upperBounds, $problem->getUpperBounds());
+        $this->assertEquals($integerVariables, $problem->getIntegerVariables());
+        $this->assertEquals($binaryVariables, $problem->getBinaryVariables());
         $this->assertEquals(count($constraints), $problem->countRows());
         $this->assertEquals(count($objective), $problem->countCols());
 
@@ -66,6 +91,8 @@ class ProblemTest extends TestCase
                 ],
                 [28.6, 0, 0, 18],
                 [Infinite, Infinite, Infinite, 48.98],
+                [],
+                [],
             ],
             [
                 [143, 60, 195],
@@ -76,6 +103,21 @@ class ProblemTest extends TestCase
                 ],
                 [],
                 [],
+                [],
+                [],
+            ],
+            [
+                [-1, -2, 0.1, 3],
+                [
+                    new Constraint([1, 1, 0, 0], LE, 5),
+                    new Constraint([2, -1, 0, 0], GE, 0),
+                    new Constraint([-1, 3, 0, 0], GE, 0),
+                    new Constraint([0, 0, 1, 1], GE, 0.5),
+                ],
+                [0, 0, 1.1, 0],
+                [],
+                [0, 0, 1, 0],
+                [1, 0, 0, 1],
             ],
         ];
     }
