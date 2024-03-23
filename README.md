@@ -1,5 +1,12 @@
 # LPSolve
 
+<p align="center">
+  <a href="https://github.com/Kerigard/lpsolve/actions"><img src="https://github.com/Kerigard/lpsolve/workflows/tests/badge.svg" alt="Build Status"></a>
+  <a href="https://packagist.org/packages/Kerigard/lpsolve"><img src="https://img.shields.io/packagist/dt/Kerigard/lpsolve" alt="Total Downloads"></a>
+  <a href="https://packagist.org/packages/Kerigard/lpsolve"><img src="https://img.shields.io/packagist/v/Kerigard/lpsolve" alt="Latest Stable Version"></a>
+  <a href="https://packagist.org/packages/Kerigard/lpsolve"><img src="https://img.shields.io/packagist/l/Kerigard/lpsolve" alt="License"></a>
+</p>
+
 [LPSolve](https://lpsolve.sourceforge.net) is a PHP extension for solving linear programming problems. This library provides a wrapper for standard lpsolve() function.
 
 ## Installation
