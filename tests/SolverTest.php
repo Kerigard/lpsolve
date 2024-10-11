@@ -151,6 +151,11 @@ class SolverTest extends TestCase
                 Solver::MIN,
                 new Solution(-2.9, 1, [1, 1, 1, 0], 0, 'OPTIMAL solution', 3),
             ],
+            [
+                new Problem([1]),
+                Solver::MIN,
+                new Solution(0, 1, [0], 0, 'OPTIMAL solution', 0),
+            ],
         ];
     }
 
