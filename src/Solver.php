@@ -212,10 +212,11 @@ class Solver
 
         lpsolve('solve', $lpsolve);
 
+        $variables = lpsolve('get_variables', $lpsolve)[0];
         $solution = new Solution(
             lpsolve('get_working_objective', $lpsolve),
             lpsolve('get_solutioncount', $lpsolve),
-            lpsolve('get_variables', $lpsolve)[0],
+            is_array($variables) ? $variables : [$variables],
             $statusCode = lpsolve('get_status', $lpsolve),
             lpsolve('get_statustext', $lpsolve, $statusCode),
             (int) lpsolve('get_total_iter', $lpsolve)
