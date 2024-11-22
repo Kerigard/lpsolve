@@ -55,7 +55,7 @@ class SolverTest extends TestCase
         $this->assertTrue(property_exists($solution, 'status'));
         $this->assertTrue(property_exists($solution, 'iterations'));
 
-        $this->assertEquals($expectedSolution->getObjective(), round($solution->getObjective(), 12));
+        $this->assertEquals(round($expectedSolution->getObjective(), 12), round($solution->getObjective(), 12));
         $this->assertEquals($expectedSolution->getCount(), $solution->getCount());
         $this->assertEquals($expectedSolution->getVariables(), array_map(function ($variable) {
             return round($variable, 12);
