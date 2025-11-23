@@ -9,10 +9,18 @@ use PHPUnit\Framework\TestCase;
 class SolutionTest extends TestCase
 {
     /**
+     * @param int|float $objective
+     * @param int $count
+     * @param list<int|float> $variables
+     * @param int $code
+     * @param string $status
+     * @param int $iterations
+     * @return void
+     *
      * @dataProvider solutions
      */
     #[DataProvider('solutions')]
-    public function testSolutionObjectConstructor($objective, $count, $variables, $code, $status, $iterations)
+    public function test_solution_object_constructor($objective, $count, $variables, $code, $status, $iterations)
     {
         $solution = new Solution($objective, $count, $variables, $code, $status, $iterations);
 
@@ -24,6 +32,16 @@ class SolutionTest extends TestCase
         $this->assertEquals($iterations, $solution->getIterations());
     }
 
+    /**
+     * @return list<array{
+     *  int|float,
+     *  int,
+     *  list<int|float>,
+     *  int,
+     *  string,
+     *  int
+     * }>
+     */
     public static function solutions()
     {
         return [

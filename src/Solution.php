@@ -5,42 +5,54 @@ namespace Kerigard\LPSolve;
 class Solution
 {
     /**
+     * Objective value.
+     *
      * @var int|float
      */
     protected $objective;
 
     /**
+     * Solutions count.
+     *
      * @var int
      */
     protected $count;
 
     /**
-     * @var int[]|float[]
+     * Variables value.
+     *
+     * @var list<int|float>
      */
     protected $variables;
 
     /**
+     * Status code.
+     *
      * @var int
      */
     protected $code;
 
     /**
+     * Status text.
+     *
      * @var string
      */
     protected $status;
 
     /**
+     * Total number of iterations.
+     *
      * @var int
      */
     protected $iterations;
 
     /**
-     * @param int|float $objective Objective value
-     * @param int $count Solutions count
-     * @param int[]|float[] $variables Variables value
-     * @param int $code Status code
-     * @param string $status Status text
-     * @param int $iterations Total number of iterations
+     * @param int|float $objective Objective value.
+     * @param int $count Solutions count.
+     * @param list<int|float> $variables Variables value.
+     * @param int $code Status code.
+     * @param string $status Status text.
+     * @param int $iterations Total number of iterations.
      */
     public function __construct($objective, $count, array $variables, $code, $status, $iterations)
     {
@@ -53,6 +65,8 @@ class Solution
     }
 
     /**
+     * Value of the objective function.
+     *
      * @return int|float
      */
     public function getObjective()
@@ -61,6 +75,8 @@ class Solution
     }
 
     /**
+     * Number of solutions found.
+     *
      * @return int
      */
     public function getCount()
@@ -69,7 +85,9 @@ class Solution
     }
 
     /**
-     * @return int[]|float[]
+     * Values of the variables.
+     *
+     * @return list<int|float>
      */
     public function getVariables()
     {
@@ -77,6 +95,8 @@ class Solution
     }
 
     /**
+     * Status code.
+     *
      * @return int Status codes: NOMEMORY, OPTIMAL, SUBOPTIMAL, INFEASIBLE, UNBOUNDED, DEGENERATE, NUMFAILURE,
      *             USERABORT, TIMEOUT, PRESOLVED, PROCFAIL, PROCBREAK, FEASFOUND, NOFEASFOUND
      */
@@ -86,6 +106,8 @@ class Solution
     }
 
     /**
+     * Description of the status.
+     *
      * @return string
      */
     public function getStatus()
@@ -94,6 +116,8 @@ class Solution
     }
 
     /**
+     * Total number of iterations.
+     *
      * @return int
      */
     public function getIterations()

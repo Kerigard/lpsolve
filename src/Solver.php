@@ -11,52 +11,74 @@ use LPSolveException;
  */
 class Solver
 {
+    /**
+     * Sets the objective function to minimize.
+     */
     const MIN = 'set_minim';
 
+    /**
+     * Sets the objective function to maximize.
+     */
     const MAX = 'set_maxim';
 
     /**
-     * @var class-string
+     * Exception class.
+     *
+     * @var class-string<Exception>
      */
     protected $exception = Exception::class;
 
     /**
-     * @var string
+     * Type of optimization (minimize or maximize).
+     *
+     * @var self::MIN|self::MAX
      */
     protected $type;
 
     /**
+     * Scaling option.
+     *
      * @var int
      */
     protected $scaling = SCALE_NONE;
 
     /**
+     * Verbosity level.
+     *
      * @var int
      */
     protected $verbose = IMPORTANT;
 
     /**
+     * Time limit.
+     *
      * @var int
      */
     protected $timeout = 0;
 
     /**
+     * Throw an exception if the optimal solution was not obtained.
+     *
      * @var bool
      */
     protected $throw = false;
 
     /**
-     * @var \Closure(mixed, \Kerigard\LPSolve\Problem): void|null
+     * Callback to run before solving the problem.
+     *
+     * @var (\Closure(mixed, \Kerigard\LPSolve\Problem): void)|null
      */
     protected $beforeCallback = null;
 
     /**
-     * @var \Closure(mixed, \Kerigard\LPSolve\Problem, \Kerigard\LPSolve\Solution): void|null
+     * Callback to run after solving the problem.
+     *
+     * @var (\Closure(mixed, \Kerigard\LPSolve\Problem, \Kerigard\LPSolve\Solution): void)|null
      */
     protected $afterCallback = null;
 
     /**
-     * @param \Kerigard\LPSolve\Solver::MIN|\Kerigard\LPSolve\Solver::MAX $type Type of optimization (minimize or maximize)
+     * @param self::MIN|self::MAX $type Type of optimization (minimize or maximize).
      *
      * @throws \LPSolveException
      * @throws \Exception
@@ -67,10 +89,10 @@ class Solver
             $this->exception = LPSolveException::class;
         }
 
-        if (!function_exists('lpsolve')) {
+        if (! function_exists('lpsolve')) {
             throw new $this->exception('Extension lpsolve not found');
         }
-        if (!in_array($type, [self::MIN, self::MAX], true)) {
+        if (! in_array($type, [self::MIN, self::MAX], true)) {
             throw new $this->exception('Objective function must be minimized or maximized');
         }
 
@@ -82,7 +104,7 @@ class Solver
      *
      * @param int $scaling Flags: SCALE_NONE, SCALE_EXTREME, SCALE_RANGE, SCALE_MEAN, SCALE_GEOMETRIC,
      *                     SCALE_CURTISREID, SCALE_QUADRATIC, SCALE_LOGARITHMIC, SCALE_USERWEIGHT, SCALE_POWER2,
-     *                     SCALE_EQUILIBRATE, SCALE_INTEGERS, SCALE_DYNUPDATE, SCALE_ROWSONLY, SCALE_COLSONLY
+     *                     SCALE_EQUILIBRATE, SCALE_INTEGERS, SCALE_DYNUPDATE, SCALE_ROWSONLY, SCALE_COLSONLY.
      * @return $this
      *
      * @link https://lpsolve.sourceforge.net/5.5/set_scaling.htm
@@ -97,7 +119,7 @@ class Solver
     /**
      * Set verbose level.
      *
-     * @param int $verbose Flag: NEUTRAL, CRITICAL, SEVERE, IMPORTANT, NORMAL, DETAILED, FULL
+     * @param int $verbose Flags: NEUTRAL, CRITICAL, SEVERE, IMPORTANT, NORMAL, DETAILED, FULL.
      * @return $this
      *
      * @link https://lpsolve.sourceforge.net/5.5/set_verbose.htm
@@ -110,12 +132,12 @@ class Solver
     }
 
     /**
-     * Set timeout.
+     * Set number of seconds after which a timeout occurs. If zero, then no timeout will occur.
      *
      * @param int $seconds
      * @return $this
      *
-     * @link https://lpsolve.sourceforge.net/5.0/set_timeout.htm
+     * @link https://lpsolve.sourceforge.net/5.5/set_timeout.htm
      */
     public function setTimeout($seconds)
     {
@@ -125,6 +147,8 @@ class Solver
     }
 
     /**
+     * Set callback before solve.
+     *
      * @param \Closure(mixed, \Kerigard\LPSolve\Problem): void $callback
      * @return $this
      */
@@ -136,6 +160,8 @@ class Solver
     }
 
     /**
+     * Set callback after solve.
+     *
      * @param \Closure(mixed, \Kerigard\LPSolve\Problem, \Kerigard\LPSolve\Solution): void $callback
      * @return $this
      */
@@ -149,15 +175,21 @@ class Solver
     /**
      * Solve problem.
      *
-     * @param \Kerigard\LPSolve\Problem $problem Defined problem
+     * @param \Kerigard\LPSolve\Problem $problem Defined problem.
      * @return \Kerigard\LPSolve\Solution
      *
      * @throws \LPSolveException
      * @throws \Exception
+     *
+     * @link https://lpsolve.sourceforge.net/5.5/solve.htm
      */
     public function solve(Problem $problem)
     {
         $lpsolve = lpsolve('make_lp', 0, $columns = $problem->countCols());
+
+        if (is_null($lpsolve)) {
+            throw new $this->exception('Unable to create new LP model');
+        }
 
         lpsolve('set_scaling', $lpsolve, $this->scaling);
         lpsolve('set_verbose', $lpsolve, $this->verbose);
@@ -182,25 +214,27 @@ class Solver
             lpsolve('set_upbo', $lpsolve, array_values($problem->getUpperBounds()));
         }
 
-        if (is_array($problem->getIntegerVariables())) {
-            foreach (array_values($problem->getIntegerVariables()) as $key => $value) {
+        $integerVariables = $problem->getIntegerVariables();
+        if (is_array($integerVariables)) {
+            foreach (array_values($integerVariables) as $key => $value) {
                 if ($value) {
                     lpsolve('set_int', $lpsolve, $key + 1, 1);
                 }
             }
-        } elseif ($problem->getIntegerVariables()) {
+        } elseif ($integerVariables) {
             for ($i = 1; $i <= $columns; $i++) {
                 lpsolve('set_int', $lpsolve, $i, 1);
             }
         }
 
-        if (is_array($problem->getBinaryVariables())) {
-            foreach (array_values($problem->getBinaryVariables()) as $key => $value) {
+        $binaryVariables = $problem->getBinaryVariables();
+        if (is_array($binaryVariables)) {
+            foreach (array_values($binaryVariables) as $key => $value) {
                 if ($value) {
                     lpsolve('set_binary', $lpsolve, $key + 1, 1);
                 }
             }
-        } elseif ($problem->getBinaryVariables()) {
+        } elseif ($binaryVariables) {
             for ($i = 1; $i <= $columns; $i++) {
                 lpsolve('set_binary', $lpsolve, $i, 1);
             }
@@ -212,7 +246,8 @@ class Solver
 
         lpsolve('solve', $lpsolve);
 
-        $variables = lpsolve('get_variables', $lpsolve)[0];
+        $variables = lpsolve('get_variables', $lpsolve);
+        $variables = isset($variables[0]) ? $variables[0] : [];
         $solution = new Solution(
             lpsolve('get_working_objective', $lpsolve),
             lpsolve('get_solutioncount', $lpsolve),
@@ -237,8 +272,8 @@ class Solver
 
     /**
      * @param string $method
-     * @param mixed[] $parameters
-     * @return $this
+     * @param list<mixed> $parameters
+     * @return mixed
      *
      * @throws \BadMethodCallException
      */

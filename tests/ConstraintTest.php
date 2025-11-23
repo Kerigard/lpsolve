@@ -9,10 +9,16 @@ use PHPUnit\Framework\TestCase;
 class ConstraintTest extends TestCase
 {
     /**
+     * @param string $string
+     * @param list<int|float> $coefficients
+     * @param LE|GE|EQ $comparison
+     * @param int|float $value
+     * @return void
+     *
      * @dataProvider constraints
      */
     #[DataProvider('constraints')]
-    public function testConstraintFromString($string, $coefficients, $comparison, $value)
+    public function test_constraint_from_string($string, $coefficients, $comparison, $value)
     {
         $constraint = Constraint::fromString($string);
 
@@ -23,10 +29,16 @@ class ConstraintTest extends TestCase
     }
 
     /**
+     * @param string $string
+     * @param list<int|float> $coefficients
+     * @param LE|GE|EQ $comparison
+     * @param int|float $value
+     * @return void
+     *
      * @dataProvider constraints
      */
     #[DataProvider('constraints')]
-    public function testConstraintAccessors($string, $coefficients, $comparison, $value)
+    public function test_constraint_accessors($string, $coefficients, $comparison, $value)
     {
         $constraint = new Constraint();
         $constraint->setCoefficients($coefficients)->setComparison($comparison)->setValue($value);
@@ -36,6 +48,14 @@ class ConstraintTest extends TestCase
         $this->assertEquals($value, $constraint->getValue());
     }
 
+    /**
+     * @return list<array{
+     *  string,
+     *  list<int|float>,
+     *  int,
+     *  int|float
+     * }>
+     */
     public static function constraints()
     {
         return [

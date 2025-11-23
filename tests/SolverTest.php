@@ -2,22 +2,28 @@
 
 namespace Kerigard\LPSolve\Tests;
 
-use Kerigard\LPSolve\Solver;
+use Kerigard\LPSolve\Constraint;
 use Kerigard\LPSolve\Problem;
 use Kerigard\LPSolve\Solution;
-use Kerigard\LPSolve\Constraint;
+use Kerigard\LPSolve\Solver;
 use LPSolveException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SolverTest extends TestCase
 {
-    public function testExtension()
+    /**
+     * @return void
+     */
+    public function test_extension()
     {
         $this->assertTrue(function_exists('lpsolve'));
     }
 
-    public function testSolverThrowException()
+    /**
+     * @return void
+     */
+    public function test_solver_throw_exception()
     {
         $this->expectException(LPSolveException::class);
         $this->expectExceptionMessage('Objective function must be minimized or maximized');
@@ -38,10 +44,14 @@ class SolverTest extends TestCase
     }
 
     /**
+     * @param \Kerigard\LPSolve\Solver::MIN|\Kerigard\LPSolve\Solver::MAX $type
+     * @param \Kerigard\LPSolve\Solution $expectedSolution
+     * @return void
+     *
      * @dataProvider problems
      */
     #[DataProvider('problems')]
-    public function testSolverSuccess(Problem $problem, $type, $expectedSolution)
+    public function test_solver_success(Problem $problem, $type, $expectedSolution)
     {
         $solver = new Solver($type);
         $solver->setScaling(SCALE_MEAN | SCALE_INTEGERS)->setVerbose(NEUTRAL);
@@ -65,6 +75,13 @@ class SolverTest extends TestCase
         $this->assertEquals($expectedSolution->getIterations(), $solution->getIterations());
     }
 
+    /**
+     * @return list<array{
+     *  \Kerigard\LPSolve\Problem,
+     *  string,
+     *  \Kerigard\LPSolve\Solution
+     * }>
+     */
     public static function problems()
     {
         return [
@@ -111,7 +128,7 @@ class SolverTest extends TestCase
                     ],
                     [0, 0, 1.1, 0],
                     [],
-                    [0, 0, 1, 0],
+                    [false, false, true, false],
                     []
                 ),
                 Solver::MIN,
@@ -128,8 +145,8 @@ class SolverTest extends TestCase
                     ],
                     [0, 0, 1.1, 0],
                     [],
-                    [0, 0, 1, 0],
-                    [1, 0, 0, 1]
+                    [false, 0, true, false],
+                    [true, false, false, 1]
                 ),
                 Solver::MIN,
                 new Solution(-4.8, 1, [1, 2, 2, 0], 0, 'OPTIMAL solution', 2),
@@ -159,7 +176,10 @@ class SolverTest extends TestCase
         ];
     }
 
-    public function testSolverFailure()
+    /**
+     * @return void
+     */
+    public function test_solver_failure()
     {
         $problem = new Problem(
             [10, 10],
@@ -179,7 +199,10 @@ class SolverTest extends TestCase
         $this->assertEquals(2, $solution->getIterations());
     }
 
-    public function testSolverFailureThrowException()
+    /**
+     * @return void
+     */
+    public function test_solver_failure_throw_exception()
     {
         $this->expectException(LPSolveException::class);
         $this->expectExceptionMessage('Model is primal INFEASIBLE');
@@ -198,7 +221,10 @@ class SolverTest extends TestCase
         $solver->throw()->solve($problem);
     }
 
-    public function testSolverCallbacks()
+    /**
+     * @return void
+     */
+    public function test_solver_callbacks()
     {
         $problem = new Problem(
             [1, 3, 6.24, 0.1],
@@ -216,7 +242,7 @@ class SolverTest extends TestCase
 
             $this->assertEquals($columns, $problem->countCols());
         })->afterSolve(function ($lpsolve, $problem, $solution) use (&$iterations) {
-            $iterations = (int) lpsolve('get_total_iter', $lpsolve);
+            $iterations = lpsolve('get_total_iter', $lpsolve);
 
             $this->assertEquals($iterations, $solution->getIterations());
         })->solve($problem);
