@@ -5,42 +5,54 @@ namespace Kerigard\LPSolve;
 class Problem
 {
     /**
+     * Array of objective coefficients.
+     *
      * @var int[]|float[]
      */
     protected $objective = [];
 
     /**
+     * Array of Constraint objects.
+     *
      * @var \Kerigard\LPSolve\Constraint[]
      */
     protected $constraints = [];
 
     /**
+     * Array of upper bounds coefficients.
+     *
      * @var int[]|float[]
      */
     protected $upperBounds = [];
 
     /**
+     * Array of lower bounds coefficients.
+     *
      * @var int[]|float[]
      */
     protected $lowerBounds = [];
 
     /**
+     * Array of integer variables.
+     *
      * @var bool[]|int[]|bool
      */
     protected $integerVariables = [];
 
     /**
+     * Array of binary variables.
+     *
      * @var bool[]|int[]|bool
      */
     protected $binaryVariables = [];
 
     /**
-     * @param int[]|float[] $objective Array of objective coefficients
-     * @param \Kerigard\LPSolve\Constraint[] $constraints Array of Constraint objects
-     * @param int[]|float[] $lowerBounds Array of lower bounds coefficients
-     * @param int[]|float[] $upperBounds Array of upper bounds coefficients
-     * @param bool[]|int[]|bool $integerVariables Array of integer variables
-     * @param bool[]|int[]|bool $binaryVariables Array of binary variables
+     * @param int[]|float[] $objective Array of objective coefficients.
+     * @param \Kerigard\LPSolve\Constraint[] $constraints Array of constraint objects.
+     * @param int[]|float[] $lowerBounds Array of lower bounds coefficients.
+     * @param int[]|float[] $upperBounds Array of upper bounds coefficients.
+     * @param bool[]|int[]|bool $integerVariables Array of integer variables.
+     * @param bool[]|int[]|bool $binaryVariables Array of binary variables.
      */
     public function __construct(
         array $objective = [],
@@ -59,6 +71,8 @@ class Problem
     }
 
     /**
+     * Get objective coefficients.
+     *
      * @return int[]|float[]
      */
     public function getObjective()
@@ -67,6 +81,8 @@ class Problem
     }
 
     /**
+     * Set objective coefficients.
+     *
      * @param int[]|float[] $objective
      * @return $this
      *
@@ -80,6 +96,8 @@ class Problem
     }
 
     /**
+     * Get constraint objects.
+     *
      * @return \Kerigard\LPSolve\Constraint[]
      */
     public function getConstraints()
@@ -88,6 +106,8 @@ class Problem
     }
 
     /**
+     * Set constraint objects.
+     *
      * @param \Kerigard\LPSolve\Constraint[] $constraints
      * @return $this
      *
@@ -101,6 +121,8 @@ class Problem
     }
 
     /**
+     * Add constraint object.
+     *
      * @return $this
      *
      * @link https://lpsolve.sourceforge.net/5.5/add_constraint.htm
@@ -113,6 +135,8 @@ class Problem
     }
 
     /**
+     * Get lower bounds coefficients.
+     *
      * @return int[]|float[]
      */
     public function getLowerBounds()
@@ -121,6 +145,8 @@ class Problem
     }
 
     /**
+     * Set lower bounds coefficients.
+     *
      * @param int[]|float[] $lowerBounds
      * @return $this
      *
@@ -134,6 +160,8 @@ class Problem
     }
 
     /**
+     * Get upper bounds coefficients.
+     *
      * @return int[]|float[]
      */
     public function getUpperBounds()
@@ -142,6 +170,8 @@ class Problem
     }
 
     /**
+     * Set upper bounds coefficients.
+     *
      * @param int[]|float[] $upperBounds
      * @return $this
      *
@@ -155,6 +185,8 @@ class Problem
     }
 
     /**
+     * Get integer variables.
+     *
      * @return bool[]|int[]|bool
      */
     public function getIntegerVariables()
@@ -163,10 +195,12 @@ class Problem
     }
 
     /**
+     * Set integer variables. If set to true, all variables will be integer.
+     *
      * @param bool[]|int[]|bool $integerVariables
      * @return $this
      *
-     * @link https://lpsolve.sourceforge.net/5.0/set_int.htm
+     * @link https://lpsolve.sourceforge.net/5.5/set_int.htm
      */
     public function setIntegerVariables($integerVariables)
     {
@@ -176,6 +210,8 @@ class Problem
     }
 
     /**
+     * Get binary variables.
+     *
      * @return bool[]|int[]|bool
      */
     public function getBinaryVariables()
@@ -184,10 +220,14 @@ class Problem
     }
 
     /**
+     * Set binary variables. If set to true, all variables will be binary.
+     *
+     * A binary variable is an integer variable with a lower bound of 0 and an upper bound of 1.
+     *
      * @param bool[]|int[]|bool $binaryVariables
      * @return $this
      *
-     * @link https://lpsolve.sourceforge.net/5.0/set_binary.htm
+     * @link https://lpsolve.sourceforge.net/5.5/set_binary.htm
      */
     public function setBinaryVariables($binaryVariables)
     {
@@ -197,6 +237,8 @@ class Problem
     }
 
     /**
+     * Get number of rows.
+     *
      * @return int
      */
     public function countRows()
@@ -205,6 +247,8 @@ class Problem
     }
 
     /**
+     * Get number of columns.
+     *
      * @return int
      */
     public function countCols()

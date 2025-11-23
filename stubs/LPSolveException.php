@@ -1,5 +1,3 @@
 <?php
 
-class LPSolveException extends Exception
-{
-}
+class LPSolveException extends Exception {}

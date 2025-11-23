@@ -2,18 +2,26 @@
 
 namespace Kerigard\LPSolve\Tests;
 
-use Kerigard\LPSolve\Problem;
 use Kerigard\LPSolve\Constraint;
+use Kerigard\LPSolve\Problem;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ProblemTest extends TestCase
 {
     /**
+     * @param list<int|float> $objective
+     * @param list<\Kerigard\LPSolve\Constraint> $constraints
+     * @param list<int|float> $lowerBounds
+     * @param list<int|float> $upperBounds
+     * @param list<bool>|bool $integerVariables
+     * @param list<bool>|bool $binaryVariables
+     * @return void
+     *
      * @dataProvider problems
      */
     #[DataProvider('problems')]
-    public function testProblemConstructor(
+    public function test_problem_constructor(
         $objective,
         $constraints,
         $lowerBounds,
@@ -41,10 +49,18 @@ class ProblemTest extends TestCase
     }
 
     /**
+     * @param list<int|float> $objective
+     * @param list<\Kerigard\LPSolve\Constraint> $constraints
+     * @param list<int|float> $lowerBounds
+     * @param list<int|float> $upperBounds
+     * @param list<bool>|bool $integerVariables
+     * @param list<bool>|bool $binaryVariables
+     * @return void
+     *
      * @dataProvider problems
      */
     #[DataProvider('problems')]
-    public function testProblemAccessors(
+    public function test_problem_accessors(
         $objective,
         $constraints,
         $lowerBounds,
@@ -79,6 +95,16 @@ class ProblemTest extends TestCase
         $this->assertEquals(count($constraints), $problem->countRows());
     }
 
+    /**
+     * @return list<array{
+     *  list<int|float>,
+     *  list<\Kerigard\LPSolve\Constraint>,
+     *  list<int|float>,
+     *  list<int|float>,
+     *  list<bool>|bool,
+     *  list<bool>|bool
+     * }>
+     */
     public static function problems()
     {
         return [
@@ -116,8 +142,8 @@ class ProblemTest extends TestCase
                 ],
                 [0, 0, 1.1, 0],
                 [],
-                [0, 0, 1, 0],
-                [1, 0, 0, 1],
+                [false, false, true, false],
+                [true, false, false, true],
             ],
         ];
     }
