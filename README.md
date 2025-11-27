@@ -33,7 +33,7 @@ require 'vendor/autoload.php'
 
 *(for PHP 5.6 - 8.x)*
 
-The repository [Kerigard/lp-solve-php-docker](https://github.com/Kerigard/lp-solve-php-docker) contains maintained source directories for building the lp_solve extension for different PHP versions.:
+The repository [Kerigard/lp-solve-php-docker](https://github.com/Kerigard/lp-solve-php-docker) contains maintained source directories for building the lp_solve extension for different PHP versions:
 
 | Branch | PHP version |
 | ------ | ----------- |
